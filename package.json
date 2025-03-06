@@ -1,0 +1,19 @@
+{
+  "name": "nyt-globe",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "three": "^0.173.0",
+    "three-geojson-geometry": "^2.1.1",
+    "vite": "^6.2.0"
+  }
+}
