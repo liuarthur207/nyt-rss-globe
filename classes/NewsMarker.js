@@ -12,7 +12,6 @@ export default class MarkerManager {
     this.material = new THREE.MeshBasicMaterial({
       color: 'blue',
     })
-    this.material.defines = { USE_UV: '' };
 
     // Create the instanced mesh.
     this.markers = new THREE.InstancedMesh(this.geometry, this.material, maxMarkers);

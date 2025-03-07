@@ -134,15 +134,11 @@ scene.add(testnode)
 */
 
 
-const markerManager = new MarkerManager(scene, camera, renderer, 100);
-console.log(markerManager.markers)
-
-
 const infoMap = new Map()
 
 let markersLoaded = false;
 
-const markerCount = 30;
+const markerCount = 50;
 let markerInfo = []; // information on markers
 let gMarker = new THREE.PlaneGeometry(0.1, 0.1);
 let mMarker = new THREE.MeshBasicMaterial({
@@ -152,18 +148,6 @@ let mMarker = new THREE.MeshBasicMaterial({
 let markers = new THREE.InstancedMesh(gMarker, mMarker, markerCount);
 
 let dummy = new THREE.Object3D();
-for (let i = 0; i < markerCount; i++) {
-  dummy.position.randomDirection().setLength(rad + 0.01);
-  dummy.lookAt(dummy.position.clone().setLength(rad + 1));
-  dummy.updateMatrix();
-  markers.setMatrixAt(i, dummy.matrix);
-
-  markerInfo.push({
-    id: i + 1,
-    mag: THREE.MathUtils.randInt(1, 10),
-    crd: dummy.position.clone()
-  });
-}
 
 async function fetchNytRSS(){
     await buildLocMap()
@@ -186,12 +170,23 @@ async function fetchNytRSS(){
             if (locMap.has(country)) {
                 if(infoMap.has(country)){
                     infoMap.get(country).push({ title: title, link: link, des: des, creator: creator, media: media })
+                    
                 }else{
                     infoMap.set(country, [{ title: title, link: link, des: des, creator: creator, media: media }]);
                     i++
-                    const country_loc = locMap.get(country);
-                    
-                    markerManager.addMarker(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01))
+                    dummy.position.randomDirection().setLength(rad + 0.01);
+                    dummy.lookAt(dummy.position.clone().setLength(rad + 1));
+                    dummy.updateMatrix();
+                    markers.setMatrixAt(i, dummy.matrix);
+                  
+                    markerInfo.push({
+                      id: i + 1,
+                      mag: THREE.MathUtils.randInt(1, 10),
+                      crd: dummy.position.clone()
+                    });
+                    scene.add(markers);
+                    //markerManager.addMarker(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01))
+
                 }
             }else{
                 console.log(country)
@@ -232,47 +227,18 @@ let intersections1;
 
 
 
-scene.add(markers);
-console.log(markerManager.markerIndex)
-
-for (let i = 0; i < markerManager.markerIndex; i++) {
-    const matrix = markerManager.markers.getMatrixAt(i);
-    const position = new THREE.Vector3();
-    matrix.getPosition(position);  // Extract the position from the matrix
-    console.log(`Marker ${i + 1} Position:`, position);
-}
-
 async function intersectionLogic(){
     await fetchNytRSS();
-    console.log("Markers Loaded: ", markerManager.markerIndex);
-    for(let i = 0; i < markerManager.markerIndex + 14; i++){
-    let matrix = new THREE.Matrix4
-    markerManager.markers.getMatrixAt(i, matrix)
-    console.log(i, ": ", matrix)
-}
 }
 
-window.addEventListener("mousemove", () => {
-    intersectionLogic().then(  );
-}, false);
-
-async function mousemove() {
-    await intersectionLogic()
-
-}
+intersectionLogic()
 
 window.addEventListener('mousemove', (event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
     intersections = raycaster.intersectObject(markers);
-    //console.log(intersections);
-
-    pointer1.x = (event.clientX / window.innerWidth) * 2 - 1;
-    pointer1.y = - (event.clientY / window.innerHeight) * 2 + 1;
-    raycaster1.setFromCamera(pointer1, camera);
-    intersections1 = raycaster1.intersectObject(markerManager.markers); // Check instances inside InstancedMesh
-    console.log(intersections1);
+    console.log(intersections);
 });
 
 intersectionLogic()
@@ -286,7 +252,6 @@ const animate = () => {
 
     //Update controls
     orbit.update()
-    scene.add(markerManager.markers)
     //console.log("camera distance:" + Math.sqrt(camera.position.z ^ 2 + camera.position.x ^ 2 + camera.position.y ^ 2))
     renderer.render(scene, camera)
     window.requestAnimationFrame(animate)
