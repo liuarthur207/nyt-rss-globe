@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import * as d3 from 'd3-geo'
 import GeoJsonGeometry from 'three-geojson-geometry'
 import MarkerManager from './classes/MarkerManager.js';
+import NewsMarker from './classes/NewsMarker.js'
 
 console.log("h")
 
@@ -138,16 +139,14 @@ const infoMap = new Map()
 
 let markersLoaded = false;
 
-const markerCount = 50;
-let markerInfo = []; // information on markers
-let gMarker = new THREE.PlaneGeometry(0.015, 0.015);
-let mMarker = new THREE.MeshBasicMaterial({
-  color: 0xff3232
-});
-//mMarker.defines = { USE_UV: " " }; // needed to be set to be able to work with UVs
-let markers = new THREE.InstancedMesh(gMarker, mMarker, markerCount);
 
-let dummy = new THREE.Object3D();
+
+let markers = [];
+
+//mMarker.defines = { USE_UV: " " }; // needed to be set to be able to work with UVs
+//let markers = new THREE.InstancedMesh(gMarker, mMarker, markerCount);
+
+//let dummy = new THREE.Object3D();
 
 async function fetchNytRSS(){
     await buildLocMap()
@@ -175,17 +174,12 @@ async function fetchNytRSS(){
                     let country_loc = locMap.get(country)
                     infoMap.set(country, [{ title: title, link: link, des: des, creator: creator, media: media }]);
                     i++
-                    dummy.position.copy(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01));
-                    dummy.lookAt(dummy.position.clone().setLength(rad + 1));
-                    dummy.updateMatrix();
-                    markers.setMatrixAt(i, dummy.matrix);
-                  
-                    markerInfo.push({
-                      id: i + 1,
-                      mag: THREE.MathUtils.randInt(1, 10),
-                      crd: dummy.position.clone()
-                    });
-                    scene.add(markers);
+                    let newsMarker = new NewsMarker(country)
+                    newsMarker.position.copy(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01))
+                    newsMarker.lookAt(newsMarker.position.clone().setLength(rad + 1));
+                    scene.add(newsMarker);
+                    markers.push(newsMarker)
+                    //scene.add(markers);
                     //markerManager.addMarker(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01))
 
                 }
@@ -224,17 +218,65 @@ let intersections;
 
 async function intersectionLogic(){
     await fetchNytRSS();
+    console.log(markers)
 }
 
-intersectionLogic()
+
+
+
+let lastIntersected = null; // Store the last intersected object
 
 window.addEventListener('mousemove', (event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
     pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
-    intersections = raycaster.intersectObject(markers);
-    console.log(intersections);
+    
+    const intersections = raycaster.intersectObjects(markers, true);
+
+    if (intersections.length > 0) {
+        const currentObject = intersections[0].object;
+
+        // If we are hovering over a new object, trigger onPointerOver
+        if (currentObject !== lastIntersected) {
+            if (lastIntersected) lastIntersected.onPointerOut(); // Call onPointerOut on the previous object
+            currentObject.onPointerOver();
+            lastIntersected = currentObject; // Update last intersected object
+        }
+    } else {
+        // If no intersections, call onPointerOut on the last intersected object
+        if (lastIntersected) {
+            lastIntersected.onPointerOut();
+            lastIntersected = null; // Reset last intersected object
+        }
+    }
 });
+
+/*
+window.addEventListener('pointermove', (e) => {
+  mouse.set((e.clientX / width) * 2 - 1, -(e.clientY / height) * 2 + 1)
+  raycaster.setFromCamera(mouse, camera)
+  intersects = raycaster.intersectObjects(scene.children, true)
+
+  // If a previously hovered item is not among the hits we must call onPointerOut
+  Object.keys(hovered).forEach((key) => {
+    const hit = intersects.find((hit) => hit.object.uuid === key)
+    if (hit === undefined) {
+      const hoveredItem = hovered[key]
+      if (hoveredItem.object.onPointerOver) hoveredItem.object.onPointerOut(hoveredItem)
+      delete hovered[key]
+    }
+  })
+
+  intersects.forEach((hit) => {
+    // If a hit has not been flagged as hovered we must call onPointerOver
+    if (!hovered[hit.object.uuid]) {
+      hovered[hit.object.uuid] = hit
+      if (hit.object.onPointerOver) hit.object.onPointerOver(hit)
+    }
+    // Call onPointerMove
+    if (hit.object.onPointerMove) hit.object.onPointerMove(hit)
+  })
+})*/
 
 intersectionLogic()
 

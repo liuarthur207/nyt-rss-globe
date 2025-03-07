@@ -54,7 +54,6 @@ addMarker(vector) {
     // Set the matrix for the marker at markerIndex
     this.markers.setMatrixAt(this.markerIndex, this.dummy.matrix);
 
-    // Ensure that the instance matrix is marked as needing an update
     this.markers.instanceMatrix.needsUpdate = true;
 
     // Increment the markerIndex
