@@ -140,7 +140,7 @@ let markersLoaded = false;
 
 const markerCount = 50;
 let markerInfo = []; // information on markers
-let gMarker = new THREE.PlaneGeometry(0.1, 0.1);
+let gMarker = new THREE.PlaneGeometry(0.015, 0.015);
 let mMarker = new THREE.MeshBasicMaterial({
   color: 0xff3232
 });
@@ -172,9 +172,10 @@ async function fetchNytRSS(){
                     infoMap.get(country).push({ title: title, link: link, des: des, creator: creator, media: media })
                     
                 }else{
+                    let country_loc = locMap.get(country)
                     infoMap.set(country, [{ title: title, link: link, des: des, creator: creator, media: media }]);
                     i++
-                    dummy.position.randomDirection().setLength(rad + 0.01);
+                    dummy.position.copy(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01));
                     dummy.lookAt(dummy.position.clone().setLength(rad + 1));
                     dummy.updateMatrix();
                     markers.setMatrixAt(i, dummy.matrix);
