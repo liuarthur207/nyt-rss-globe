@@ -221,12 +221,6 @@ let pointer = new THREE.Vector2();
 let raycaster = new THREE.Raycaster();
 let intersections;
 
-let pointer1 = new THREE.Vector2();
-let raycaster1 = new THREE.Raycaster();
-let intersections1;
-
-
-
 async function intersectionLogic(){
     await fetchNytRSS();
 }
