@@ -3,7 +3,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import * as d3 from 'd3-geo'
 import GeoJsonGeometry from 'three-geojson-geometry'
-import MarkerManager from './classes/MarkerManager.js';
 import NewsMarker from './classes/NewsMarker.js'
 
 console.log("h")
@@ -224,7 +223,7 @@ async function intersectionLogic(){
 
 
 
-let lastIntersected = null; // Store the last intersected object
+let lastIntersected = null; 
 
 window.addEventListener('mousemove', (event) => {
     pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -236,47 +235,18 @@ window.addEventListener('mousemove', (event) => {
     if (intersections.length > 0) {
         const currentObject = intersections[0].object;
 
-        // If we are hovering over a new object, trigger onPointerOver
         if (currentObject !== lastIntersected) {
-            if (lastIntersected) lastIntersected.onPointerOut(); // Call onPointerOut on the previous object
+            if (lastIntersected) lastIntersected.onPointerOut();
             currentObject.onPointerOver();
-            lastIntersected = currentObject; // Update last intersected object
+            lastIntersected = currentObject; 
         }
     } else {
-        // If no intersections, call onPointerOut on the last intersected object
         if (lastIntersected) {
             lastIntersected.onPointerOut();
-            lastIntersected = null; // Reset last intersected object
+            lastIntersected = null; 
         }
     }
 });
-
-/*
-window.addEventListener('pointermove', (e) => {
-  mouse.set((e.clientX / width) * 2 - 1, -(e.clientY / height) * 2 + 1)
-  raycaster.setFromCamera(mouse, camera)
-  intersects = raycaster.intersectObjects(scene.children, true)
-
-  // If a previously hovered item is not among the hits we must call onPointerOut
-  Object.keys(hovered).forEach((key) => {
-    const hit = intersects.find((hit) => hit.object.uuid === key)
-    if (hit === undefined) {
-      const hoveredItem = hovered[key]
-      if (hoveredItem.object.onPointerOver) hoveredItem.object.onPointerOut(hoveredItem)
-      delete hovered[key]
-    }
-  })
-
-  intersects.forEach((hit) => {
-    // If a hit has not been flagged as hovered we must call onPointerOver
-    if (!hovered[hit.object.uuid]) {
-      hovered[hit.object.uuid] = hit
-      if (hit.object.onPointerOver) hit.object.onPointerOver(hit)
-    }
-    // Call onPointerMove
-    if (hit.object.onPointerMove) hit.object.onPointerMove(hit)
-  })
-})*/
 
 intersectionLogic()
 

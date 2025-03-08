@@ -1616,6 +1616,14 @@
       "latitude" : -54.5,
       "longitude" : -37
     },
+    {
+      "country" : "South Sudan",
+      "alpha2" : "GS",
+      "alpha3" : "SGS",
+      "numeric" : 239,
+      "latitude" : 7,
+      "longitude" : 30
+    },
 {
       "country" : "Spain",
       "alpha2" : "ES",

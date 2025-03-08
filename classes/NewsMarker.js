@@ -10,13 +10,9 @@ export default class NewsMarker extends THREE.Mesh {
       this.country = country
     }
   
-    onResize(width, height, aspect) {
-      this.size = width / 5 // 1/5 of the full width
-      this.scale.setScalar(this.size * (this.active ? 1.5 : 1))
-    }
-  
     onPointerOver(e) {
       this.material.color.set('orange')
+      console.log(this.country)
     }
   
     onPointerOut(e) {
