@@ -59,6 +59,7 @@ export default class NewsMarker extends THREE.Mesh {
     onKeyDown(event) {
         if (event.key === 'Escape') {
           if(this.htmlObject) this.htmlObject.visible = false;
+          this.material.color.set('red');
         }
     }
 }
