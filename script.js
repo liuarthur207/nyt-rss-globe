@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import * as d3 from 'd3-geo'
 import GeoJsonGeometry from 'three-geojson-geometry'
 import NewsMarker from './classes/NewsMarker.js'
+import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 
 console.log("h")
 
@@ -60,6 +61,16 @@ const camera = new THREE.PerspectiveCamera(75, sizes.width/sizes.height)
 let renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
+
+// Create CSS2DRenderer and set it up
+const cssRenderer = new CSS2DRenderer();
+cssRenderer.setSize(window.innerWidth, window.innerHeight)
+cssRenderer.domElement.style.position = 'absolute';
+cssRenderer.domElement.style.top = '0';
+cssRenderer.domElement.style.pointerEvents = 'none';  // Prevent interference with controls
+cssRenderer.domElement.style.zIndex = '1';  // Ensure it's behind the WebGLRenderer
+document.body.appendChild(cssRenderer.domElement);
+
 
 fetch('./geojson/ne_110m_admin_0_countries.geojson').then(res => res.json()).then(countries =>
     {
@@ -173,7 +184,7 @@ async function fetchNytRSS(){
                     let country_loc = locMap.get(country)
                     infoMap.set(country, [{ title: title, link: link, des: des, creator: creator, media: media }]);
                     i++
-                    let newsMarker = new NewsMarker(country)
+                    let newsMarker = new NewsMarker(country, infoMap)
                     newsMarker.position.copy(latLonToVector3(country_loc.lat, country_loc.lon).multiplyScalar(1.01))
                     newsMarker.lookAt(newsMarker.position.clone().setLength(rad + 1));
                     scene.add(newsMarker);
@@ -248,6 +259,18 @@ window.addEventListener('mousemove', (event) => {
     }
 });
 
+window.addEventListener('click', (event) => {
+  pointer.x = (event.clientX / window.innerWidth) * 2 - 1;
+  pointer.y = - (event.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  
+  const intersections = raycaster.intersectObjects(markers, true);
+
+  if (intersections.length > 0) {
+  intersections[0].object.onClick()
+  }
+});
+
 intersectionLogic()
 
 
@@ -261,6 +284,7 @@ const animate = () => {
     orbit.update()
     //console.log("camera distance:" + Math.sqrt(camera.position.z ^ 2 + camera.position.x ^ 2 + camera.position.y ^ 2))
     renderer.render(scene, camera)
+    cssRenderer.render(scene, camera); // For HTML objects
     window.requestAnimationFrame(animate)
 }
 animate()
