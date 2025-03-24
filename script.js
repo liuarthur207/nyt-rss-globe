@@ -117,47 +117,10 @@ const blacksphere = new THREE.Mesh(
 
 let rad = 1.005;
 
-// Markers
-/*
-for (let i = 0; i < markerCount; i++) {
-  dummy.position.randomDirection().setLength(rad);
-  dummy.lookAt(dummy.position.clone().setLength(rad + 1));
-  dummy.updateMatrix();
-  markers.setMatrixAt(i, dummy.matrix)
-
-  markerInfo.push({
-    id: i + 1,
-    mag: THREE.MathUtils.randInt(1, 10),
-    crd: dummy.position.clone()
-  });
-}
-  */
-
-/*
-let gtestnode = new THREE.CircleGeometry(0.015);
-let mtestnode = new THREE.MeshBasicMaterial({
-  color: 'blue',
-  }
-);
-const testnode = new THREE.Mesh(gtestnode, mtestnode)
-testnode.position.copy(latLonToVector3(49, 32).multiplyScalar(1.01))
-testnode.lookAt(testnode.position.clone().setLength(rad + 1));
-scene.add(testnode)
-*/
-
-
 const infoMap = new Map()
 
 let markersLoaded = false;
-
-
-
 let markers = [];
-
-//mMarker.defines = { USE_UV: " " }; // needed to be set to be able to work with UVs
-//let markers = new THREE.InstancedMesh(gMarker, mMarker, markerCount);
-
-//let dummy = new THREE.Object3D();
 
 async function fetchNytRSS(){
     await buildLocMap()
@@ -205,9 +168,10 @@ async function fetchNytRSS(){
     }
     console.log(infoMap)
 }
-camera.position.z = 2
+
 
 //Controls
+camera.position.z = 2.5
 const orbit = new OrbitControls(camera, canvas)
 orbit.enableDamping = true
 orbit.minDistance = 1.2
@@ -276,6 +240,8 @@ intersectionLogic()
 
 
 const clock = new THREE.Clock()
+let camera_dist
+
 
 const animate = () => {
     const elapsedTime = clock.getElapsedTime()
@@ -283,7 +249,8 @@ const animate = () => {
 
     //Update controls
     orbit.update()
-    //console.log("camera distance:" + Math.sqrt(camera.position.z ^ 2 + camera.position.x ^ 2 + camera.position.y ^ 2))
+    camera_dist = Math.hypot(camera.position.x, camera.position.y, camera.position.z);
+    document.getElementById("info").style.opacity = camera_dist * 1.25 - 2
     renderer.render(scene, camera)
     cssRenderer.render(scene, camera); // For HTML objects
     window.requestAnimationFrame(animate)
