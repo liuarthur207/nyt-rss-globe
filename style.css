@@ -11,3 +11,14 @@
     left: 0;
     outline: none;
 }
+
+#info {
+    position: absolute;
+    bottom: 1vh;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white;
+    font-size: 30px;
+    text-align: center;
+    z-index: 10; 
+}
