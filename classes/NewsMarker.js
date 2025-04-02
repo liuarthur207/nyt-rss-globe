@@ -18,6 +18,11 @@ export default class NewsMarker extends THREE.Mesh {
         this.window.addEventListener('keydown', this.onKeyDown.bind(this));
     }
 
+    close(){
+      if(this.htmlObject) this.htmlObject.visible = false;
+      this.material.color.set('red');
+    }
+
     onPointerOver(e) {
         if (!this.material.color.equals(new THREE.Color('white'))) {
             this.material.color.set('orange');
@@ -42,10 +47,19 @@ export default class NewsMarker extends THREE.Mesh {
 
         // Create the HTML element and CSS2DObject for displaying country news
         const el = document.createElement('div');
-        el.innerHTML = this.newsMap.get(this.country) || "No news available";
-        el.style.color = "black";
-        el.style.background = "white";
+        el.innerHTML += "<b>" + this.country + "</b>"+ "<br>";
+        for(let i = 0; i < this.newsMap.get(this.country).length; i++){
+          el.innerHTML += "- " + this.newsMap.get(this.country)[i].title + "<br>";
+        }
+        
+        
+        
+        //styling
+        el.style.fontFamily = "'Courier New', Courier, monospace";
+        el.style.color = "white";
+        el.style.background = "black";
         el.style.padding = "5px";
+        el.style.border = "2px solid white"
         el.style.borderRadius = "5px";
         el.style.fontSize = '12px';
 
@@ -58,8 +72,7 @@ export default class NewsMarker extends THREE.Mesh {
 
     onKeyDown(event) {
         if (event.key === 'Escape') {
-          if(this.htmlObject) this.htmlObject.visible = false;
-          this.material.color.set('red');
+          this.close()
         }
     }
 }

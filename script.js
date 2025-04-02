@@ -171,7 +171,7 @@ async function fetchNytRSS(){
 
 
 //Controls
-camera.position.z = 2.5
+camera.position.z = 3
 const orbit = new OrbitControls(camera, canvas)
 orbit.enableDamping = true
 orbit.minDistance = 1.2
@@ -250,7 +250,7 @@ const animate = () => {
     //Update controls
     orbit.update()
     camera_dist = Math.hypot(camera.position.x, camera.position.y, camera.position.z);
-    document.getElementById("info").style.opacity = camera_dist * 1.25 - 2
+    document.getElementById("info").style.opacity = camera_dist * 1.5 - 3
     renderer.render(scene, camera)
     cssRenderer.render(scene, camera); // For HTML objects
     window.requestAnimationFrame(animate)
