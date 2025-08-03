@@ -4,13 +4,29 @@
     padding: 0;
 }
 
+.label {
+    pointer-events: none;
+    z-index: 20;
+}
+
 .webgl
 {
+    pointer-events: auto;
     position: fixed;
     top: 0;
     left: 0;
     outline: none;
 }
+
+.css2d-container {
+    pointer-events: auto !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
 
 #info {
     position: absolute;

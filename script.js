@@ -125,7 +125,9 @@ let markers = [];
 async function fetchNytRSS(){
     await buildLocMap()
     try {
-        const response = await fetch("https://rss.nytimes.com/services/xml/rss/nyt/World.xml")
+        const remoteURL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
+        const localURL  = "/testing/World.xml";
+        const response = await fetch(localURL)
         const data = await response.text()
         const parser = new DOMParser()
         const doc = parser.parseFromString(data, "text/xml");
@@ -249,6 +251,7 @@ const animate = () => {
 
     //Update controls
     orbit.update()
+
     camera_dist = Math.hypot(camera.position.x, camera.position.y, camera.position.z);
     document.getElementById("info").style.opacity = camera_dist * 1.5 - 3
     renderer.render(scene, camera)

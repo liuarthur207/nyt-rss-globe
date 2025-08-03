@@ -39,36 +39,59 @@ export default class NewsMarker extends THREE.Mesh {
 
     onClick(e) {
         this.material.color.set('white');
-
+    
         if (this.htmlObject) {
             this.htmlObject.visible = true;
             return;
         }
-
-        // Create the HTML element and CSS2DObject for displaying country news
+    
         const el = document.createElement('div');
-        el.innerHTML += "<b>" + this.country + "</b>"+ "<br>";
-        for(let i = 0; i < this.newsMap.get(this.country).length; i++){
-          el.innerHTML += "- " + this.newsMap.get(this.country)[i].title + "<br>";
+    
+        const closeButton = document.createElement('button');
+        closeButton.textContent = 'X';
+        closeButton.style.position = "absolute";
+        closeButton.style.right = "0px";
+        closeButton.style.top = "0px";
+        closeButton.style.background = "transparent";
+        closeButton.style.color = "white";
+        closeButton.addEventListener("click", (event) => {
+            event.stopPropagation();
+            console.log("click");
+            this.close();
+        });
+        el.appendChild(closeButton);
+    
+        const countryLabel = document.createElement('b');
+        countryLabel.textContent = this.country;
+        el.appendChild(countryLabel);
+        el.appendChild(document.createElement('br'));
+    
+        const news = this.newsMap.get(this.country);
+        for (let i = 0; i < news.length; i++) {
+            const a = document.createElement('a');
+            a.href = news[i].link;
+            a.textContent = "- " + news[i].title;
+            a.target = "_blank";
+            el.appendChild(a);
+            el.appendChild(document.createElement('br'));
         }
-        
-        
-        
-        //styling
+        el.style.pointerEvents = 'auto';
         el.style.fontFamily = "'Courier New', Courier, monospace";
         el.style.color = "white";
         el.style.background = "black";
         el.style.padding = "5px";
-        el.style.border = "2px solid white"
+        el.style.border = "2px solid white";
         el.style.borderRadius = "5px";
         el.style.fontSize = '12px';
-
-        const objectCSS = new CSS2DObject(el);
-        objectCSS.position.set(0, 0.02, 0); 
-        this.add(objectCSS); 
-        this.htmlObject = objectCSS; 
+        el.style.position = "relative"; 
+    
+        const label = new CSS2DObject(el);
+        label.position.set(0, 0.02, 0);
+        this.add(label);
+        this.htmlObject = label;
         this.htmlObject.visible = true;
     }
+    
 
     onKeyDown(event) {
         if (event.key === 'Escape') {
