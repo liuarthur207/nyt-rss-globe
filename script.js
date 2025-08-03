@@ -248,7 +248,9 @@ let camera_dist
 const animate = () => {
     const elapsedTime = clock.getElapsedTime()
     //group.rotation.y = elapsedTime * 0.1
-
+    for(const marker of markers){
+      marker.updateLabelOpacity(camera, globe);
+    }
     //Update controls
     orbit.update()
 

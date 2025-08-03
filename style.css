@@ -27,6 +27,24 @@
     height: 100%;
 }
 
+.news-link {
+    font-family: 'Courier New', Courier, monospace;
+    color: white;
+    background: black;
+    font-size: 12px;
+    position: relative;
+    text-decoration: none;
+  }
+  
+  .news-link:visited {
+    color:yellow;
+  }
+  
+
+  .news-link:hover {
+    color: red;
+  }
+
 
 #info {
     position: absolute;

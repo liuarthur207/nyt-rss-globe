@@ -72,6 +72,9 @@ export default class NewsMarker extends THREE.Mesh {
             a.href = news[i].link;
             a.textContent = "- " + news[i].title;
             a.target = "_blank";
+            a.classList.add('news-link');
+            
+            //a.style.
             el.appendChild(a);
             el.appendChild(document.createElement('br'));
         }
@@ -84,6 +87,8 @@ export default class NewsMarker extends THREE.Mesh {
         el.style.borderRadius = "5px";
         el.style.fontSize = '12px';
         el.style.position = "relative"; 
+
+
     
         const label = new CSS2DObject(el);
         label.position.set(0, 0.02, 0);
@@ -91,6 +96,26 @@ export default class NewsMarker extends THREE.Mesh {
         this.htmlObject = label;
         this.htmlObject.visible = true;
     }
+    
+    updateLabelOpacity(camera) {
+        if (!this.htmlObject) return;
+        const normal = this.position.clone().normalize();
+        const viewDir = camera.position.clone().normalize();
+    
+        const dot = normal.dot(viewDir);
+    
+        const opacity = smoothstep(0.2, 0.8, dot);
+        this.htmlObject.element.style.opacity = opacity.toFixed(2);
+        this.htmlObject.element.style.display = opacity < 0.01 ? 'none' : 'block';
+    
+        function smoothstep(min, max, v) {
+            const x = Math.max(0, Math.min(1, (v - min) / (max - min)));
+            return x * x * (3 - 2 * x);
+        }
+    }
+    
+    
+    
     
 
     onKeyDown(event) {
