@@ -27,25 +27,20 @@ export default class NewsMarker extends THREE.Mesh {
               uniform vec3  uBaseColor, uHoverColor, uActiveColor;
               varying vec2 vUv;
       
-                void main() {
-                // build a simple concentric-ring alpha mask
+              void main() {
                 vec2 centered = vUv - 0.5;
-                float d = length(centered) * 2.0;  // 0 at center → 1 at edge
+                float d = length(centered) * 2.0;
                 if (d > 1.0) discard;
-
-                // animate a ripple
+                
                 float ripple = 0.5 + 0.5 * sin(20.0 * d - uTime * 5.0);
-
-                // 1) mix base & hover
+    
                 vec3 color = mix(uBaseColor, uHoverColor, uHover);
-
+    
                 color = mix(color, uActiveColor, uActive);
-
-
-                // apply ripple to alpha
+    
                 float alpha = smoothstep(1.0, 0.9, d) * ripple;
                 gl_FragColor = vec4(color, alpha);
-                }
+              }
             `,
             transparent: true,
             depthWrite: false
