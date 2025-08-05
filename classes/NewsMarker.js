@@ -4,8 +4,52 @@ import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 export default class NewsMarker extends THREE.Mesh {
     constructor(country, newsMap) {
         super();
-        this.geometry = new THREE.CircleGeometry(0.015);
-        this.material = new THREE.MeshBasicMaterial({ color: 'red' });
+        this.geometry = new THREE.CircleGeometry(0.05);
+        this.material = new THREE.ShaderMaterial({
+            uniforms: {
+              uTime:       { value: 0 },
+              uBaseColor:  { value: new THREE.Color('red') },
+              uHoverColor: { value: new THREE.Color('orange') },
+              uActiveColor:{ value: new THREE.Color('white')},
+              uHover:      { value: 0.0 },
+              uActive:     { value: 0.0 },
+            },
+            vertexShader: `
+              varying vec2 vUv;
+              void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+              }
+            `,
+            fragmentShader: `
+              precision mediump float;
+              uniform float uTime, uHover, uActive;
+              uniform vec3  uBaseColor, uHoverColor, uActiveColor;
+              varying vec2 vUv;
+      
+                void main() {
+                // build a simple concentric-ring alpha mask
+                vec2 centered = vUv - 0.5;
+                float d = length(centered) * 2.0;  // 0 at center → 1 at edge
+                if (d > 1.0) discard;
+
+                // animate a ripple
+                float ripple = 0.5 + 0.5 * sin(20.0 * d - uTime * 5.0);
+
+                // 1) mix base & hover
+                vec3 color = mix(uBaseColor, uHoverColor, uHover);
+
+                color = mix(color, uActiveColor, uActive);
+
+
+                // apply ripple to alpha
+                float alpha = smoothstep(1.0, 0.9, d) * ripple;
+                gl_FragColor = vec4(color, alpha);
+                }
+            `,
+            transparent: true,
+            depthWrite: false
+          });
         this.size = 0;
         this.active = false;
         this.country = country;
@@ -20,25 +64,27 @@ export default class NewsMarker extends THREE.Mesh {
 
     close(){
       if(this.htmlObject) this.htmlObject.visible = false;
-      this.material.color.set('red');
+      this.material.uniforms.uBaseColor.value.set('red');
+      this.material.uniforms.uActive.value = 0.0;
     }
 
     onPointerOver(e) {
-        if (!this.material.color.equals(new THREE.Color('white'))) {
-            this.material.color.set('orange');
+        if (this.material.uniforms.uActive.value === 0.0) {
+            this.material.uniforms.uHover.value = 1.0;
         }
         console.log(this.country);
         console.log(this.newsMap.get(this.country));
     }
 
     onPointerOut(e) {
-        if (!this.material.color.equals(new THREE.Color('white'))) {
-            this.material.color.set('red');
+        if (this.material.uniforms.uActive.value === 0.0) {
+            this.material.uniforms.uHover.value = 0.0;
         }
     }
 
     onClick(e) {
-        this.material.color.set('white');
+        this.material.uniforms.uActive.value = 1.0;
+        this.material.uniforms.uHover.value  = 0.0;
     
         if (this.htmlObject) {
             this.htmlObject.visible = true;

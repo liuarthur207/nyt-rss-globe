@@ -5,6 +5,7 @@ import * as d3 from 'd3-geo'
 import GeoJsonGeometry from 'three-geojson-geometry'
 import NewsMarker from './classes/NewsMarker.js'
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
+import { deltaTime } from 'three/tsl'
 
 console.log("h")
 
@@ -126,8 +127,8 @@ async function fetchNytRSS(){
     await buildLocMap()
     try {
         const remoteURL = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml";
-        const localURL  = "/testing/World.xml";
-        const response = await fetch(localURL)
+        const localURL  = "/testing/World.xml"; //For testing offline
+        const response = await fetch(remoteURL)
         const data = await response.text()
         const parser = new DOMParser()
         const doc = parser.parseFromString(data, "text/xml");
