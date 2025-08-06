@@ -5,7 +5,7 @@ import * as d3 from 'd3-geo'
 import GeoJsonGeometry from 'three-geojson-geometry'
 import NewsMarker from './classes/NewsMarker.js'
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
-import { deltaTime } from 'three/tsl'
+import { deltaTime, rand } from 'three/tsl'
 
 
 //Converts latitude and longitude data to points on the globe
@@ -164,6 +164,12 @@ async function fetchNytRSS(){
             }
             });
           });
+          // by id
+          document.getElementById('info').textContent = "Click marker to show news";
+          document.getElementById('meta').textContent = 
+          doc.querySelector("copyright").textContent.trim()
+          + "\nLast Build: " + doc.querySelector("lastBuildDate").textContent.trim()
+
           markersLoaded = true;
     } catch (error) {
         console.error("Error fetching or processing RSS data:", error);
@@ -257,6 +263,7 @@ const animate = () => {
 
     camera_dist = Math.hypot(camera.position.x, camera.position.y, camera.position.z);
     document.getElementById("info").style.opacity = camera_dist * 1.5 - 3
+    document.getElementById("meta").style.opacity = camera_dist * 1.5 - 3
     renderer.render(scene, camera)
     cssRenderer.render(scene, camera); // For HTML objects
     window.requestAnimationFrame(animate)

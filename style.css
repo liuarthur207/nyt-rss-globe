@@ -44,6 +44,20 @@
     color: red;
   }
 
+#meta {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: white;
+    font-size: 20px;
+    padding: 8px;
+    text-align: left;
+    font-family: 'Courier New', Courier, monospace;
+    z-index: 10; 
+    pointer-events: none;
+    white-space: pre-wrap;
+}
+
 
 #info {
     position: absolute;

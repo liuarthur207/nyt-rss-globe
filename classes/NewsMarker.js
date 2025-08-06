@@ -4,7 +4,7 @@ import { CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 export default class NewsMarker extends THREE.Mesh {
     constructor(country, newsMap) {
         super();
-        this.geometry = new THREE.CircleGeometry(0.05);
+        this.geometry = new THREE.CircleGeometry(0.04);
         this.material = new THREE.ShaderMaterial({
             uniforms: {
               uTime:       { value: 0 },
