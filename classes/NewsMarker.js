@@ -37,8 +37,15 @@ export default class NewsMarker extends THREE.Mesh {
                 vec3 color = mix(uBaseColor, uHoverColor, uHover);
     
                 color = mix(color, uActiveColor, uActive);
+
+                float coreRadius = 0.3;
+                float coreFade   = 0.01;
+                // coreMask goes 1→0 as d goes 0→coreRadius
+                float coreMask   = smoothstep(coreRadius, coreRadius - coreFade, d);
     
                 float alpha = smoothstep(1.0, 0.9, d) * ripple;
+
+                alpha = max(alpha, coreMask);
                 gl_FragColor = vec4(color, alpha);
               }
             `,

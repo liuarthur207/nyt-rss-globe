@@ -7,7 +7,6 @@ import NewsMarker from './classes/NewsMarker.js'
 import { CSS2DRenderer } from 'three/examples/jsm/renderers/CSS2DRenderer.js';
 import { deltaTime } from 'three/tsl'
 
-console.log("h")
 
 //Converts latitude and longitude data to points on the globe
 function latLonToVector3(lat, lon, radius = 1) {
@@ -169,7 +168,7 @@ async function fetchNytRSS(){
     } catch (error) {
         console.error("Error fetching or processing RSS data:", error);
     }
-    console.log(infoMap)
+    //console.log(infoMap)
 }
 
 
@@ -196,7 +195,7 @@ let intersections;
 
 async function intersectionLogic(){
     await fetchNytRSS();
-    console.log(markers)
+    //console.log(markers)
 }
 
 
@@ -251,6 +250,7 @@ const animate = () => {
     //group.rotation.y = elapsedTime * 0.1
     for(const marker of markers){
       marker.updateLabelOpacity(camera, globe);
+      marker.material.uniforms.uTime.value = elapsedTime;
     }
     //Update controls
     orbit.update()
