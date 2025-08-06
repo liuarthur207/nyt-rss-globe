@@ -172,7 +172,8 @@ async function fetchNytRSS(){
 
           markersLoaded = true;
     } catch (error) {
-        console.error("Error fetching or processing RSS data:", error);
+      document.getElementById('meta').textContent = "Error fetching or processing RSS data";
+      console.error("Error fetching or processing RSS data:", error);
     }
     //console.log(infoMap)
 }
