@@ -155,6 +155,9 @@ export default class NewsMarker extends THREE.Mesh {
         const opacity = smoothstep(0.2, 0.8, dot);
         this.htmlObject.element.style.opacity = opacity.toFixed(2);
         this.htmlObject.element.style.display = opacity < 0.01 ? 'none' : 'block';
+
+        //disable links if link is on other side of globe
+        this.htmlObject.element.style.pointerEvents = opacity < 0.1 ? 'none'  : 'auto';
     
         function smoothstep(min, max, v) {
             const x = Math.max(0, Math.min(1, (v - min) / (max - min)));

@@ -4,6 +4,8 @@
     padding: 0;
 }
 
+
+
 .label {
     pointer-events: none;
     z-index: 20;
@@ -45,7 +47,7 @@
   }
 
 #meta {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     color: white;
@@ -56,12 +58,11 @@
     z-index: 10; 
     pointer-events: none;
     white-space: pre-wrap;
-    overflow: hidden;
 }
 
 
 #info {
-    position: absolute;
+    position: fixed;
     bottom: 1vh;
     left: 50%;
     transform: translateX(-50%);
@@ -71,5 +72,4 @@
     font-family: 'Courier New', Courier, monospace;
     z-index: 10; 
     pointer-events: none;
-    overflow: hidden;
 }
