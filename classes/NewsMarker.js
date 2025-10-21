@@ -100,6 +100,7 @@ export default class NewsMarker extends THREE.Mesh {
         closeButton.style.position = "absolute";
         closeButton.style.right = "0px";
         closeButton.style.top = "0px";
+        closeButton.style.cursor = "pointer";
         closeButton.style.background = "transparent";
         closeButton.style.color = "white";
         closeButton.addEventListener("click", (event) => {
