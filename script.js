@@ -63,6 +63,9 @@ let renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
 
+renderer.domElement.id = "globeCanvas";
+renderer.domElement.style.cursor = "grab";
+
 // Create CSS2DRenderer and set it up
 const cssRenderer = new CSS2DRenderer();
 cssRenderer.setSize(window.innerWidth, window.innerHeight)
@@ -165,7 +168,7 @@ async function fetchNytRSS(){
             });
           });
           // by id
-          document.getElementById('info').textContent = "Click marker to show news";
+          document.getElementById('info').innerHTML = "Drag to rotate · Scroll to zoom<br>Click marker to show news";
           document.getElementById('meta').textContent = 
           doc.querySelector("copyright").textContent.trim()
           + "\nLast Build: " + doc.querySelector("lastBuildDate").textContent.trim()

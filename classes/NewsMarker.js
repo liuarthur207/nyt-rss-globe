@@ -73,15 +73,20 @@ export default class NewsMarker extends THREE.Mesh {
     onPointerOver(e) {
         if (this.material.uniforms.uActive.value === 0.0) {
             this.material.uniforms.uHover.value = 1.0;
+            
         }
-        console.log(this.country);
-        console.log(this.newsMap.get(this.country));
+
+        const canvas = document.getElementById("globeCanvas");
+        if (canvas) canvas.style.cursor = "pointer";
     }
 
     onPointerOut(e) {
         if (this.material.uniforms.uActive.value === 0.0) {
             this.material.uniforms.uHover.value = 0.0;
         }
+
+        const canvas = document.getElementById("globeCanvas");
+        if (canvas) canvas.style.cursor = "grab";
     }
 
     onClick(e) {

@@ -4,6 +4,12 @@
     padding: 0;
 }
 
+canvas {
+  cursor: grab;
+}
+canvas:active {
+  cursor: grabbing;
+}
 
 
 .label {
@@ -67,7 +73,7 @@
     left: 50%;
     transform: translateX(-50%);
     color: white;
-    font-size: 30px;
+    font-size: 25px;
     text-align: center;
     font-family: 'Courier New', Courier, monospace;
     z-index: 10; 
