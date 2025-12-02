@@ -64,7 +64,7 @@ let renderer = new THREE.WebGLRenderer({
 })
 
 renderer.domElement.id = "globeCanvas";
-renderer.domElement.style.cursor = "grab";
+
 
 // Create CSS2DRenderer and set it up
 const cssRenderer = new CSS2DRenderer();

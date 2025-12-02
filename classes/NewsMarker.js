@@ -86,7 +86,7 @@ export default class NewsMarker extends THREE.Mesh {
         }
 
         const canvas = document.getElementById("globeCanvas");
-        if (canvas) canvas.style.cursor = "grab";
+        if (canvas) canvas.style.cursor = "";
     }
 
     onClick(e) {
